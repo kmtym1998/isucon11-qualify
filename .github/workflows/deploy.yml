@@ -16,8 +16,8 @@ isucon:
 
       - name: Generate SSH Private Keys
         run: |
-          echo ${{ secrets.SSH_PRIVATE_KEY_CONTENT }} > ~/.ssh/${{ secrets.SSH_PRIVATE_KEY_NAME }}
-          chmod 400 ~/.ssh/${{ secrets.SSH_PRIVATE_KEY_NAME }}
+          echo ${{ secrets.SSH_PRIVATE_KEY_CONTENT }} > ~/.ssh/private_key.pem 
+          chmod 400 ~/.ssh/private_key.pem
 
       - name: Deploy Server 1
         run: |
