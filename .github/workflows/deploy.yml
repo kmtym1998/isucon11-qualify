@@ -1,0 +1,39 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+
+isucon:
+  deploy:
+    name: Deploy 
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate SSH Private Keys
+        run: |
+          echo ${{ secrets.SSH_PRIVATE_KEY_CONTENT }} > ~/.ssh/${{ secrets.SSH_PRIVATE_KEY_NAME }}
+          chmod 400 ~/.ssh/${{ secrets.SSH_PRIVATE_KEY_NAME }}
+
+      - name: Deploy Server 1
+        run: |
+          ssh -t -t -o "StrictHostKeyChecking=no" -i ~/.ssh/private_key.pem $HOST "git pull origin main && make deploy1"
+        env:
+          HOST: ${{ secrets.HOST_1 }}
+
+      - name: Deploy Server 2
+        run: |
+          ssh -t -t -o "StrictHostKeyChecking=no" -i ~/.ssh/private_key.pem $HOST "git pull origin main && make deploy2"
+        env:
+          HOST: ${{ secrets.HOST_2 }}
+
+      - name: Deploy Server 3
+        run: |
+          ssh -t -t -o "StrictHostKeyChecking=no" -i ~/.ssh/private_key.pem $HOST "git pull origin main && make deploy3"
+        env:
+          HOST: ${{ secrets.HOST_3 }}
+
